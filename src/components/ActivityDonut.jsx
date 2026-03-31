@@ -89,6 +89,7 @@ export default function ActivityDonut({ monthData }) {
               strokeLinecap="butt"
               transform={`rotate(-90 ${cx} ${cy})`}
               opacity={0.85}
+              style={{ transition: "stroke-dasharray 0.6s ease, stroke-dashoffset 0.6s ease" }}
             />
           ))}
           {/* Center text */}

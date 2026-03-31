@@ -66,6 +66,7 @@ export default function DayCell({ day, data, selected, onSelect, isSunday }) {
               height: 5.5,
               borderRadius: "50%",
               background: a.color,
+              animation: "dotPulse 2s ease-in-out infinite",
             }}
           />
         ))}

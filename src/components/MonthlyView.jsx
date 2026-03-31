@@ -159,6 +159,7 @@ export default function MonthlyView() {
           alignItems: "center",
           justifyContent: "center",
           gap: 8,
+          animation: sharing ? "none" : "breathe 3s ease-in-out infinite",
         }}
       >
         {sharing ? "Preparing..." : "📤 Share Monthly Summary"}

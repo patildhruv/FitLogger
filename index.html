@@ -82,6 +82,38 @@
         50% { transform: scaleY(0.95) scaleX(1.05); opacity: 1; }
         75% { transform: scaleY(1.05) scaleX(0.97); opacity: 0.85; }
       }
+      @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(12px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes slideInRight {
+        from { opacity: 0; transform: translateX(10px); }
+        to { opacity: 1; transform: translateX(0); }
+      }
+      @keyframes growWidth {
+        from { width: 0%; }
+      }
+      @keyframes breathe {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.03); }
+      }
+      @keyframes popIn {
+        0% { opacity: 0; transform: scale(0.85); }
+        60% { transform: scale(1.05); }
+        100% { opacity: 1; transform: scale(1); }
+      }
+      @keyframes toastSlide {
+        from { opacity: 0; transform: translateY(8px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      @keyframes dotPulse {
+        0%, 100% { opacity: 0.7; }
+        50% { opacity: 1; }
+      }
+      @keyframes shimmer {
+        0% { background-position: -200% 0; }
+        100% { background-position: 200% 0; }
+      }
     </style>
   </head>
   <body>

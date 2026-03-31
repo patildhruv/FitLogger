@@ -135,6 +135,7 @@ export default function TodayLog({ todayData, dayNote, onNoteChange, onEditLog, 
                   borderRadius: 10,
                   padding: "6px 10px",
                   cursor: "pointer",
+                  animation: "popIn 0.3s ease",
                 }}
               >
                 <span style={{ fontSize: 14 }}>{a.emoji}</span>
@@ -242,6 +243,7 @@ export default function TodayLog({ todayData, dayNote, onNoteChange, onEditLog, 
             fontWeight: 600,
             textAlign: "center",
             fontFamily: "'DM Sans', sans-serif",
+            animation: "toastSlide 0.3s ease",
           }}
         >
           {toast}

@@ -220,6 +220,16 @@ export default function App() {
         >
           Pappa's Tracker
         </h1>
+        {/* Subtle animated underline */}
+        <div style={{
+          width: 40,
+          height: 3,
+          borderRadius: 2,
+          background: "linear-gradient(90deg, #2D9CDB, #9B51E0, #F2994A, #EB5757, #56CCF2)",
+          backgroundSize: "200% 100%",
+          animation: "shimmer 3s linear infinite",
+          margin: "4px auto 6px",
+        }} />
         <div style={{ fontSize: 13, color: "var(--text-muted)", fontWeight: 500 }}>
           {dateStr}
         </div>
@@ -256,6 +266,7 @@ export default function App() {
               padding: "12px 8px",
               textAlign: "center",
               border: "1px solid var(--card-border-strong)",
+              animation: `fadeInUp 0.3s ease ${i * 0.1}s both`,
             }}
           >
             <div style={{ fontSize: 22, fontWeight: 700, color: "var(--text-primary)", lineHeight: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 2 }}>

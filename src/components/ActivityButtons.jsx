@@ -36,9 +36,13 @@ export default function ActivityButtons({ onStart, isRunning, activeActivity }) 
                 : "var(--card-bg-strong)",
               cursor: isDisabled ? "not-allowed" : "pointer",
               opacity: isDisabled ? 0.4 : 1,
-              transition: "all 0.2s ease",
+              transition: "all 0.15s ease",
               fontFamily: "'DM Sans', sans-serif",
+              animation: isActive ? "breathe 2s ease-in-out infinite" : "fadeInUp 0.3s ease",
             }}
+            onPointerDown={(e) => { if (!isDisabled) e.currentTarget.style.transform = "scale(0.95)"; }}
+            onPointerUp={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
+            onPointerLeave={(e) => { e.currentTarget.style.transform = "scale(1)"; }}
           >
             <span style={{ fontSize: 28 }}>{a.emoji}</span>
             <span

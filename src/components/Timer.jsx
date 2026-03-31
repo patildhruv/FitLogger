@@ -32,6 +32,7 @@ export default function Timer({ activeTimer, elapsed, isPaused, onStop, onCancel
         maxWidth: 420,
         width: "100%",
         marginBottom: 16,
+        animation: "fadeInUp 0.3s ease",
         textAlign: "center",
       }}
     >

@@ -77,7 +77,7 @@ export default function Summary({ monthData, daysInMonth }) {
                   width: `${Math.min(pct, 100)}%`,
                   background: `linear-gradient(90deg, ${a.color}, ${a.color}cc)`,
                   borderRadius: 3,
-                  transition: "width 0.6s ease",
+                  animation: "growWidth 0.8s ease-out",
                 }}
               />
             </div>

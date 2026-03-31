@@ -79,7 +79,7 @@ export default function History({ sortedDays }) {
         </div>
       )}
 
-      {sortedDays.map((day) => {
+      {sortedDays.map((day, idx) => {
         const activeActs = activities.filter((a) => day[a.key]);
         const totalMin = activeActs.reduce((s, a) => s + day[a.key], 0);
         const isSharing = sharingDay === day.date;
@@ -91,6 +91,7 @@ export default function History({ sortedDays }) {
               borderRadius: 16,
               padding: 14,
               border: "1px solid var(--card-border)",
+              animation: idx < 20 ? `fadeInUp 0.3s ease ${Math.min(idx * 0.04, 0.6)}s both` : undefined,
             }}
           >
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>

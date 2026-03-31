@@ -40,7 +40,7 @@ export default function ManualLogger({ todayData, onLog }) {
         gap: 10,
       }}
     >
-      {activities.map((a) => {
+      {activities.map((a, i) => {
         const pending = values[a.key] || 0;
         const logged = todayData[a.key] || 0;
         return (
@@ -51,6 +51,7 @@ export default function ManualLogger({ todayData, onLog }) {
               borderRadius: 14,
               padding: "12px 14px",
               border: "1px solid var(--card-border)",
+              animation: `fadeInUp 0.3s ease ${i * 0.05}s both`,
             }}
           >
             {/* Top row: activity info + +/- controls + log */}

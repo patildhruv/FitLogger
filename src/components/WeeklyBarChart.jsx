@@ -77,7 +77,10 @@ export default function WeeklyBarChart({ logs }) {
                     rx={segH === (day.total / maxTotal) * barMaxH ? 6 : 0}
                     fill={seg.color}
                     opacity={0.85}
-                  />
+                  >
+                    <animate attributeName="height" from="0" to={segH} dur="0.6s" fill="freeze" />
+                    <animate attributeName="y" from={chartH} to={yOffset} dur="0.6s" fill="freeze" />
+                  </rect>
                 );
               })}
               {/* Total on top */}
