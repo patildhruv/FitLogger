@@ -1,0 +1,88 @@
+import { ACTIVITIES } from "../data/activities";
+
+export default function Summary({ monthData, daysInMonth }) {
+  const actCounts = {};
+  const totalMinByAct = {};
+  ACTIVITIES.forEach((a) => {
+    actCounts[a.key] = 0;
+    totalMinByAct[a.key] = 0;
+  });
+
+  Object.values(monthData).forEach((d) => {
+    ACTIVITIES.forEach((a) => {
+      if (d[a.key]) {
+        actCounts[a.key]++;
+        totalMinByAct[a.key] += d[a.key];
+      }
+    });
+  });
+
+  return (
+    <div
+      style={{
+        background: "rgba(255,255,255,0.55)",
+        backdropFilter: "blur(12px)",
+        borderRadius: 18,
+        padding: 16,
+        maxWidth: 420,
+        width: "100%",
+        border: "1px solid rgba(0,0,0,0.06)",
+      }}
+    >
+      <div
+        style={{
+          fontSize: 12,
+          fontWeight: 700,
+          color: "#1a1a2e",
+          marginBottom: 12,
+          letterSpacing: 0.5,
+          textTransform: "uppercase",
+        }}
+      >
+        Monthly Summary
+      </div>
+      {ACTIVITIES.map((a) => {
+        const count = actCounts[a.key];
+        const mins = totalMinByAct[a.key];
+        const pct = daysInMonth > 0 ? (count / daysInMonth) * 100 : 0;
+        return (
+          <div key={a.key} style={{ marginBottom: 10 }}>
+            <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
+              <span style={{ fontSize: 12, fontWeight: 600, color: "#555" }}>
+                {a.emoji} {a.label}
+              </span>
+              <span style={{ fontSize: 11, color: "#777" }}>
+                <span style={{ fontWeight: 700, color: a.color }}>{count}</span>
+                <span style={{ color: "#bbb" }}>/{daysInMonth} days</span>
+                {mins > 0 && (
+                  <span style={{ marginLeft: 6, color: "#aaa" }}>
+                    ({Math.floor(mins / 60) > 0 ? `${Math.floor(mins / 60)}h` : ""}
+                    {mins % 60 > 0 ? ` ${mins % 60}m` : ""})
+                  </span>
+                )}
+              </span>
+            </div>
+            <div
+              style={{
+                height: 6,
+                background: "rgba(0,0,0,0.05)",
+                borderRadius: 3,
+                overflow: "hidden",
+              }}
+            >
+              <div
+                style={{
+                  height: "100%",
+                  width: `${Math.min(pct, 100)}%`,
+                  background: `linear-gradient(90deg, ${a.color}, ${a.color}cc)`,
+                  borderRadius: 3,
+                  transition: "width 0.6s ease",
+                }}
+              />
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
