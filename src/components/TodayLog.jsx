@@ -1,11 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useActivities } from "../hooks/useActivities";
+import { captureAndShare } from "../utils/shareCard";
+import ShareableCard from "./ShareableCard";
 
-export default function TodayLog({ todayData, dayNote, onNoteChange }) {
+export default function TodayLog({ todayData, dayNote, onNoteChange, dateStr, activeDays, daysInMonth }) {
   const activities = useActivities();
   const activeActivities = activities.filter((a) => todayData[a.key]);
   const totalMin = activeActivities.reduce((sum, a) => sum + todayData[a.key], 0);
   const [note, setNote] = useState(dayNote);
+  const [sharing, setSharing] = useState(false);
+  const cardRef = useRef(null);
 
   useEffect(() => {
     setNote(dayNote);
@@ -16,6 +20,20 @@ export default function TodayLog({ todayData, dayNote, onNoteChange }) {
     if (trimmed !== dayNote) {
       onNoteChange(trimmed);
     }
+  }
+
+  async function handleShare() {
+    if (sharing) return;
+    setSharing(true);
+    await new Promise((r) => setTimeout(r, 100));
+    if (cardRef.current) {
+      try {
+        await captureAndShare(cardRef.current, {
+          text: "My fitness summary for today!",
+        });
+      } catch {}
+    }
+    setSharing(false);
   }
 
   return (
@@ -30,6 +48,17 @@ export default function TodayLog({ todayData, dayNote, onNoteChange }) {
         border: "1px solid var(--card-border)",
       }}
     >
+      {/* Off-screen shareable card */}
+      <div style={{ position: "absolute", left: -9999, top: 0, width: 420 }}>
+        <ShareableCard
+          ref={cardRef}
+          dayData={todayData}
+          dateStr={dateStr}
+          activeDays={activeDays}
+          daysInMonth={daysInMonth}
+        />
+      </div>
+
       {activeActivities.length === 0 ? (
         <div style={{ textAlign: "center", padding: "4px 0 8px" }}>
           <div style={{ fontSize: 28, marginBottom: 6 }}>🏃‍♂️</div>
@@ -46,9 +75,27 @@ export default function TodayLog({ todayData, dayNote, onNoteChange }) {
             <div style={{ fontSize: 12, fontWeight: 700, color: "var(--text-primary)", letterSpacing: 0.5, textTransform: "uppercase" }}>
               Today's Log
             </div>
-            <div style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 600 }}>
-              {Math.floor(totalMin / 60) > 0 && `${Math.floor(totalMin / 60)}h `}
-              {totalMin % 60}m total
+            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+              <div style={{ fontSize: 11, color: "var(--text-muted)", fontWeight: 600 }}>
+                {Math.floor(totalMin / 60) > 0 && `${Math.floor(totalMin / 60)}h `}
+                {totalMin % 60}m total
+              </div>
+              <button
+                onClick={handleShare}
+                disabled={sharing}
+                style={{
+                  background: "none",
+                  border: "none",
+                  fontSize: 16,
+                  cursor: sharing ? "wait" : "pointer",
+                  padding: "2px 4px",
+                  opacity: sharing ? 0.4 : 0.6,
+                  lineHeight: 1,
+                }}
+                title="Share today's summary"
+              >
+                📤
+              </button>
             </div>
           </div>
           <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginBottom: 10 }}>
@@ -76,7 +123,7 @@ export default function TodayLog({ todayData, dayNote, onNoteChange }) {
         </>
       )}
 
-      {/* Day note - always visible and editable */}
+      {/* Day note */}
       <div style={{ marginTop: activeActivities.length === 0 ? 8 : 0 }}>
         <textarea
           value={note}

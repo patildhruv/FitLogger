@@ -1,7 +1,7 @@
 export default function TabBar({ activeTab, onTabChange }) {
   const tabs = [
     { key: "today", label: "Today" },
-    { key: "summary", label: "Summary" },
+    { key: "monthly", label: "Monthly" },
     { key: "history", label: "History" },
   ];
 

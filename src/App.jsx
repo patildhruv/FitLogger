@@ -7,12 +7,9 @@ import Timer from "./components/Timer";
 import ActivityButtons from "./components/ActivityButtons";
 import TodayLog from "./components/TodayLog";
 import TabBar from "./components/TabBar";
+import MonthlyView from "./components/MonthlyView";
 import History from "./components/History";
 import WeeklyBarChart from "./components/WeeklyBarChart";
-import ActivityDonut from "./components/ActivityDonut";
-import Calendar from "./components/Calendar";
-import Summary from "./components/Summary";
-import DailySummary from "./components/DailySummary";
 import Settings from "./components/Settings";
 
 function SplashScreen({ fading }) {
@@ -240,22 +237,15 @@ export default function App() {
             todayData={todayData}
             dayNote={todayData.note || ""}
             onNoteChange={(text) => setDayNote(todayDateKey, text)}
+            dateStr={dateStr}
+            activeDays={activeDaysThisMonth}
+            daysInMonth={daysInMonth}
           />
 
           <WeeklyBarChart logs={logs} />
-          <ActivityDonut monthData={monthData} />
-
-          <Calendar monthData={monthData} year={year} month={month} />
-
-          <Summary monthData={monthData} daysInMonth={daysInMonth} />
         </>
-      ) : activeTab === "summary" ? (
-        <DailySummary
-          todayData={todayData}
-          dateStr={dateStr}
-          activeDays={activeDaysThisMonth}
-          daysInMonth={daysInMonth}
-        />
+      ) : activeTab === "monthly" ? (
+        <MonthlyView />
       ) : (
         <History sortedDays={getSortedDays()} />
       )}
