@@ -1,13 +1,16 @@
 import { useRef, useState } from "react";
 import { useActivitiesManager } from "../hooks/useActivities";
+import { useInstallPrompt } from "../hooks/useInstallPrompt";
 import ActivityManager from "./ActivityManager";
 
 export default function Settings({ logs, onReplace, onMerge, onClearAll }) {
   const { activities, setAllActivities } = useActivitiesManager();
+  const { canInstall, isInstalled, isIOS, install } = useInstallPrompt();
   const fileRef = useRef(null);
   const [importMsg, setImportMsg] = useState(null);
   const [showActivities, setShowActivities] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
+  const [showInstallHelp, setShowInstallHelp] = useState(false);
 
   function handleExport() {
     const data = {
@@ -88,7 +91,103 @@ export default function Settings({ logs, onReplace, onMerge, onClearAll }) {
 
   return (
     <>
-      {/* Data Management */}
+      {/* Install App */}
+      {!isInstalled && (
+        <div
+          style={{
+            background: "var(--card-bg)",
+            borderRadius: 16,
+            padding: 16,
+            maxWidth: 420,
+            width: "100%",
+            marginBottom: 16,
+            border: "1px solid var(--card-border)",
+          }}
+        >
+          <div style={{ fontSize: 12, fontWeight: 700, color: "var(--text-primary)", marginBottom: 10, letterSpacing: 0.5, textTransform: "uppercase" }}>
+            Install App
+          </div>
+          <div style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 10 }}>
+            Install PappaFit on your phone for quick access, offline support, and a full-screen experience.
+          </div>
+
+          {canInstall ? (
+            <button
+              onClick={install}
+              style={{
+                width: "100%",
+                padding: "12px 16px",
+                borderRadius: 12,
+                border: "none",
+                background: "#2D9CDB",
+                color: "#fff",
+                fontSize: 14,
+                fontWeight: 700,
+                cursor: "pointer",
+                fontFamily: "'DM Sans', sans-serif",
+              }}
+            >
+              📲 Install PappaFit App
+            </button>
+          ) : (
+            <>
+              <button
+                onClick={() => setShowInstallHelp((s) => !s)}
+                style={{
+                  width: "100%",
+                  padding: "10px 16px",
+                  borderRadius: 12,
+                  border: "1.5px solid var(--card-border)",
+                  background: "var(--card-bg-strong)",
+                  color: "var(--text-primary)",
+                  fontSize: 13,
+                  fontWeight: 600,
+                  cursor: "pointer",
+                  fontFamily: "'DM Sans', sans-serif",
+                }}
+              >
+                📲 {showInstallHelp ? "Hide" : "How to"} Install
+              </button>
+              {showInstallHelp && (
+                <div
+                  style={{
+                    marginTop: 10,
+                    padding: 12,
+                    borderRadius: 12,
+                    background: "var(--note-bg)",
+                  }}
+                >
+                  {isIOS ? (
+                    <div style={{ fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.6 }}>
+                      <div style={{ fontWeight: 700, marginBottom: 6 }}>iPhone / iPad (Safari):</div>
+                      <div>1. Tap the <strong>Share</strong> button (square with arrow)</div>
+                      <div>2. Scroll down and tap <strong>"Add to Home Screen"</strong></div>
+                      <div>3. Tap <strong>"Add"</strong></div>
+                      <div style={{ marginTop: 8, fontSize: 11, color: "var(--text-muted)" }}>
+                        Note: Must use Safari. Chrome/Firefox on iOS don't support this.
+                      </div>
+                    </div>
+                  ) : (
+                    <div style={{ fontSize: 12, color: "var(--text-secondary)", lineHeight: 1.6 }}>
+                      <div style={{ fontWeight: 700, marginBottom: 6 }}>Android (Chrome):</div>
+                      <div>1. Tap the <strong>3-dot menu</strong> (top right)</div>
+                      <div>2. Tap <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong></div>
+                      <div>3. Tap <strong>"Install"</strong></div>
+                      <div style={{ marginTop: 10, fontWeight: 700, marginBottom: 6 }}>iPhone / iPad (Safari):</div>
+                      <div>1. Open in <strong>Safari</strong> (not Chrome)</div>
+                      <div>2. Tap the <strong>Share</strong> button (square with arrow)</div>
+                      <div>3. Tap <strong>"Add to Home Screen"</strong></div>
+                      <div>4. Tap <strong>"Add"</strong></div>
+                    </div>
+                  )}
+                </div>
+              )}
+            </>
+          )}
+        </div>
+      )}
+
+      {/* Settings */}
       <div
         style={{
           background: "var(--card-bg)",
@@ -104,7 +203,7 @@ export default function Settings({ logs, onReplace, onMerge, onClearAll }) {
           Settings
         </div>
 
-        {/* Export / Import / Activities */}
+        {/* Export / Import */}
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 10 }}>
           <button onClick={handleExport} style={btnStyle}>
             📤 Export
