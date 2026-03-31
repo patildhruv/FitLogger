@@ -39,8 +39,6 @@ export default function History({ sortedDays }) {
       {sortedDays.map((day) => {
         const activeActs = activities.filter((a) => day[a.key]);
         const totalMin = activeActs.reduce((s, a) => s + day[a.key], 0);
-        const notes = day.notes || [];
-
         return (
           <div
             key={day.date}
@@ -89,23 +87,19 @@ export default function History({ sortedDays }) {
                 No activities
               </div>
             )}
-            {notes.length > 0 && (
-              <div style={{ marginTop: 6, display: "flex", flexDirection: "column", gap: 3 }}>
-                {notes.map((n, i) => (
-                  <div
-                    key={i}
-                    style={{
-                      fontSize: 11,
-                      color: "var(--text-muted)",
-                      fontStyle: "italic",
-                      background: "var(--note-bg)",
-                      borderRadius: 6,
-                      padding: "3px 8px",
-                    }}
-                  >
-                    📝 {n.text}
-                  </div>
-                ))}
+            {day.note && (
+              <div
+                style={{
+                  marginTop: 6,
+                  fontSize: 11,
+                  color: "var(--text-muted)",
+                  fontStyle: "italic",
+                  background: "var(--note-bg)",
+                  borderRadius: 6,
+                  padding: "3px 8px",
+                }}
+              >
+                📝 {day.note}
               </div>
             )}
           </div>

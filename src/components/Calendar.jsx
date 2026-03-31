@@ -185,23 +185,19 @@ export default function Calendar({ monthData, year, month }) {
               {isSundaySelected ? "Rest day" : "No exercises logged"}
             </div>
           )}
-          {selectedData.notes && selectedData.notes.length > 0 && (
-            <div style={{ marginTop: 10, display: "flex", flexDirection: "column", gap: 4 }}>
-              {selectedData.notes.map((n, i) => (
-                <div
-                  key={i}
-                  style={{
-                    fontSize: 12,
-                    color: "var(--text-muted)",
-                    fontStyle: "italic",
-                    background: "var(--note-bg)",
-                    borderRadius: 8,
-                    padding: "5px 10px",
-                  }}
-                >
-                  📝 {n.text}
-                </div>
-              ))}
+          {selectedData.note && (
+            <div
+              style={{
+                marginTop: 10,
+                fontSize: 12,
+                color: "var(--text-muted)",
+                fontStyle: "italic",
+                background: "var(--note-bg)",
+                borderRadius: 8,
+                padding: "6px 10px",
+              }}
+            >
+              📝 {selectedData.note}
             </div>
           )}
         </div>

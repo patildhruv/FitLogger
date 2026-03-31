@@ -4,7 +4,6 @@ import { useTimer } from "./hooks/useTimer";
 import { useLogs } from "./hooks/useLogs";
 import { useActivities } from "./hooks/useActivities";
 import Timer from "./components/Timer";
-import NotePrompt from "./components/NotePrompt";
 import ActivityButtons from "./components/ActivityButtons";
 import TodayLog from "./components/TodayLog";
 import TabBar from "./components/TabBar";
@@ -66,31 +65,20 @@ export default function App() {
   }, []);
 
   const activities = useActivities();
-  const { logs, addLog, getToday, getMonth, getSortedDays, replaceAllLogs, mergeLogs, clearAllLogs } = useLogs();
+  const { logs, addLog, setDayNote, getToday, getMonth, getSortedDays, replaceAllLogs, mergeLogs, clearAllLogs, todayKey } = useLogs();
 
-  const {
-    activeTimer, elapsed, isRunning, isPaused, pendingSession,
-    startTimer, stopTimer, cancelTimer, pauseTimer, resumeTimer, finalizePendingSession,
-  } = useTimer(activities);
-
-  const handleSessionFinalize = useCallback(
-    (noteText) => {
-      if (pendingSession) {
-        addLog(pendingSession.activity, pendingSession.minutes, noteText || undefined);
-        finalizePendingSession();
-        confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
-      }
+  const handleTimerComplete = useCallback(
+    (activityKey, minutes) => {
+      addLog(activityKey, minutes);
+      confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
     },
-    [pendingSession, addLog, finalizePendingSession]
+    [addLog]
   );
 
-  const handleSessionSkip = useCallback(() => {
-    if (pendingSession) {
-      addLog(pendingSession.activity, pendingSession.minutes);
-      finalizePendingSession();
-      confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
-    }
-  }, [pendingSession, addLog, finalizePendingSession]);
+  const {
+    activeTimer, elapsed, isRunning, isPaused,
+    startTimer, stopTimer, cancelTimer, pauseTimer, resumeTimer,
+  } = useTimer(activities, handleTimerComplete);
 
   const now = new Date();
   const year = now.getFullYear();
@@ -98,6 +86,7 @@ export default function App() {
   const daysInMonth = new Date(year, month, 0).getDate();
   const monthData = getMonth(year, month);
   const todayData = getToday();
+  const todayDateKey = todayKey();
 
   const dateStr = now.toLocaleDateString("en-IN", {
     weekday: "long",
@@ -125,7 +114,6 @@ export default function App() {
 
       {/* Header */}
       <div style={{ textAlign: "center", marginBottom: 20, maxWidth: 420, width: "100%", position: "relative" }}>
-        {/* Settings gear */}
         <button
           onClick={() => setShowSettings((s) => !s)}
           style={{
@@ -172,7 +160,6 @@ export default function App() {
         </div>
       </div>
 
-      {/* Settings Panel */}
       {showSettings && (
         <Settings logs={logs} onReplace={replaceAllLogs} onMerge={mergeLogs} onClearAll={clearAllLogs} />
       )}
@@ -228,12 +215,10 @@ export default function App() {
         ))}
       </div>
 
-      {/* Tab Bar */}
       <TabBar activeTab={activeTab} onTabChange={setActiveTab} />
 
       {activeTab === "today" ? (
         <>
-          {/* Timer */}
           <Timer
             activeTimer={activeTimer}
             elapsed={elapsed}
@@ -244,35 +229,23 @@ export default function App() {
             onResume={resumeTimer}
           />
 
-          {/* Note Prompt */}
-          {pendingSession && (
-            <NotePrompt
-              session={pendingSession}
-              onSave={handleSessionFinalize}
-              onSkip={handleSessionSkip}
-            />
-          )}
+          <ActivityButtons
+            onStart={startTimer}
+            isRunning={isRunning}
+            activeActivity={activeTimer?.activity}
+          />
 
-          {/* Activity Buttons */}
-          {!pendingSession && (
-            <ActivityButtons
-              onStart={startTimer}
-              isRunning={isRunning}
-              activeActivity={activeTimer?.activity}
-            />
-          )}
+          <TodayLog
+            todayData={todayData}
+            dayNote={todayData.note || ""}
+            onNoteChange={(text) => setDayNote(todayDateKey, text)}
+          />
 
-          {/* Today's Log */}
-          <TodayLog todayData={todayData} />
-
-          {/* Charts */}
           <WeeklyBarChart logs={logs} />
           <ActivityDonut monthData={monthData} />
 
-          {/* Calendar */}
           <Calendar monthData={monthData} year={year} month={month} />
 
-          {/* Monthly Summary */}
           <Summary monthData={monthData} daysInMonth={daysInMonth} />
         </>
       ) : (

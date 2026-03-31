@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
 const TIMER_KEY = "pappa-fit-active-timer";
-const PENDING_KEY = "pappa-fit-pending-session";
 const DEFAULT_TITLE = "PappaFit Logger - Daily Fitness Tracker";
 
 function loadTimer() {
@@ -21,23 +20,6 @@ function saveTimer(timer) {
   }
 }
 
-function loadPendingSession() {
-  try {
-    const raw = localStorage.getItem(PENDING_KEY);
-    return raw ? JSON.parse(raw) : null;
-  } catch {
-    return null;
-  }
-}
-
-function savePendingSession(session) {
-  if (session) {
-    localStorage.setItem(PENDING_KEY, JSON.stringify(session));
-  } else {
-    localStorage.removeItem(PENDING_KEY);
-  }
-}
-
 function computeElapsed(timer) {
   if (!timer) return 0;
   const now = timer.pausedAt || Date.now();
@@ -51,10 +33,9 @@ function formatTimeShort(ms) {
   return `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 }
 
-export function useTimer(activities) {
+export function useTimer(activities, onComplete) {
   const [activeTimer, setActiveTimer] = useState(loadTimer);
   const [elapsed, setElapsed] = useState(() => computeElapsed(loadTimer()));
-  const [pendingSession, setPendingSession] = useState(loadPendingSession);
   const intervalRef = useRef(null);
   const activitiesRef = useRef(activities);
   activitiesRef.current = activities;
@@ -74,14 +55,14 @@ export function useTimer(activities) {
       setElapsed(computeElapsed(activeTimer));
       const act = activitiesRef.current?.find((a) => a.key === activeTimer.activity);
       document.title = `⏸ ${act?.label || ""} Paused - PappaFit`;
-    } else if (!pendingSession) {
+    } else {
       setElapsed(0);
       document.title = DEFAULT_TITLE;
     }
     return () => {
       if (intervalRef.current) clearInterval(intervalRef.current);
     };
-  }, [activeTimer, pendingSession]);
+  }, [activeTimer]);
 
   const startTimer = useCallback((activityKey) => {
     const timer = {
@@ -117,18 +98,13 @@ export function useTimer(activities) {
     if (!activeTimer) return;
     const elapsedMs = computeElapsed(activeTimer);
     const minutes = Math.max(1, Math.round(elapsedMs / 60000));
-    const session = { activity: activeTimer.activity, minutes };
-    setPendingSession(session);
-    savePendingSession(session);
+    if (onComplete) {
+      onComplete(activeTimer.activity, minutes);
+    }
     setActiveTimer(null);
     saveTimer(null);
     document.title = DEFAULT_TITLE;
-  }, [activeTimer]);
-
-  const finalizePendingSession = useCallback(() => {
-    setPendingSession(null);
-    savePendingSession(null);
-  }, []);
+  }, [activeTimer, onComplete]);
 
   const cancelTimer = useCallback(() => {
     setActiveTimer(null);
@@ -141,12 +117,10 @@ export function useTimer(activities) {
     elapsed,
     isRunning: !!activeTimer,
     isPaused,
-    pendingSession,
     startTimer,
     stopTimer,
     cancelTimer,
     pauseTimer,
     resumeTimer,
-    finalizePendingSession,
   };
 }

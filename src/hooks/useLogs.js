@@ -23,21 +23,32 @@ function todayKey() {
 export function useLogs() {
   const [logs, setLogs] = useState(loadLogs);
 
-  const addLog = useCallback((activityKey, minutes, noteText) => {
+  const addLog = useCallback((activityKey, minutes) => {
     const key = todayKey();
     setLogs((prev) => {
       const dayLog = prev[key] || {};
-      const notes = dayLog.notes || [];
-      const updatedDay = {
-        ...dayLog,
-        [activityKey]: (dayLog[activityKey] || 0) + minutes,
+      const updated = {
+        ...prev,
+        [key]: {
+          ...dayLog,
+          [activityKey]: (dayLog[activityKey] || 0) + minutes,
+        },
       };
-      if (noteText) {
-        updatedDay.notes = [...notes, { activity: activityKey, text: noteText, minutes }];
-      } else if (notes.length > 0) {
-        updatedDay.notes = notes;
+      saveLogs(updated);
+      return updated;
+    });
+  }, []);
+
+  const setDayNote = useCallback((dateKey, text) => {
+    setLogs((prev) => {
+      const dayLog = prev[dateKey] || {};
+      const updatedDay = { ...dayLog };
+      if (text) {
+        updatedDay.note = text;
+      } else {
+        delete updatedDay.note;
       }
-      const updated = { ...prev, [key]: updatedDay };
+      const updated = { ...prev, [dateKey]: updatedDay };
       saveLogs(updated);
       return updated;
     });
@@ -83,9 +94,10 @@ export function useLogs() {
           const existing = merged[dateKey];
           const mergedDay = { ...existing };
           Object.entries(dayData).forEach(([k, v]) => {
-            if (k === "notes") {
-              const existingNotes = mergedDay.notes || [];
-              mergedDay.notes = [...existingNotes, ...(v || [])];
+            if (k === "note") {
+              if (v && !mergedDay.note) mergedDay.note = v;
+            } else if (k === "notes") {
+              // backward compat: ignore old per-activity notes array
             } else if (typeof v === "number") {
               mergedDay[k] = Math.max(mergedDay[k] || 0, v);
             }
@@ -103,5 +115,5 @@ export function useLogs() {
     saveLogs({});
   }, []);
 
-  return { logs, addLog, getToday, getMonth, getSortedDays, replaceAllLogs, mergeLogs, clearAllLogs, todayKey };
+  return { logs, addLog, setDayNote, getToday, getMonth, getSortedDays, replaceAllLogs, mergeLogs, clearAllLogs, todayKey };
 }
