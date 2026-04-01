@@ -1,5 +1,6 @@
 import { forwardRef } from "react";
 import { useActivities } from "../hooks/useActivities";
+import { theme } from "../utils/cardTheme";
 
 const MONTH_NAMES = [
   "January", "February", "March", "April", "May", "June",
@@ -16,6 +17,7 @@ function fmtTime(min) {
 
 const ShareableMonthCard = forwardRef(function ShareableMonthCard({ monthData, year, month, daysInMonth }, ref) {
   const activities = useActivities();
+  const t = theme();
 
   const activeDays = Object.keys(monthData).length;
   const totals = {};
@@ -32,46 +34,42 @@ const ShareableMonthCard = forwardRef(function ShareableMonthCard({ monthData, y
     <div
       ref={ref}
       style={{
-        background: "linear-gradient(145deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)",
+        background: t.bg,
         borderRadius: 24,
         padding: "28px 20px 24px",
-        color: "#fff",
+        color: t.text,
         fontFamily: "'DM Sans', sans-serif",
         position: "relative",
         overflow: "hidden",
         width: 420,
       }}
     >
-      {/* Decorative */}
-      <div style={{ position: "absolute", top: -30, right: -30, width: 120, height: 120, borderRadius: "50%", background: "rgba(155,81,224,0.12)" }} />
-      <div style={{ position: "absolute", bottom: -20, left: -20, width: 80, height: 80, borderRadius: "50%", background: "rgba(242,153,74,0.1)" }} />
+      <div style={{ position: "absolute", top: -30, right: -30, width: 120, height: 120, borderRadius: "50%", background: t.decorC }} />
+      <div style={{ position: "absolute", bottom: -20, left: -20, width: 80, height: 80, borderRadius: "50%", background: t.decorB }} />
 
-      {/* Header */}
       <div style={{ textAlign: "center", marginBottom: 20, position: "relative" }}>
-        <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 3, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", marginBottom: 4 }}>
+        <div style={{ fontSize: 10, fontWeight: 600, letterSpacing: 3, color: t.textSub, textTransform: "uppercase", marginBottom: 4 }}>
           Monthly Fitness Summary
         </div>
         <div style={{ fontFamily: "'Playfair Display', serif", fontSize: 24, fontWeight: 800, marginBottom: 2 }}>
           {MONTH_NAMES[month - 1]} {year}
         </div>
-        <div style={{ fontSize: 11, color: "rgba(255,255,255,0.5)", fontWeight: 500 }}>
+        <div style={{ fontSize: 11, color: t.textSub, fontWeight: 500 }}>
           Pappa's Tracker
         </div>
       </div>
 
-      {/* Big total */}
       <div style={{ textAlign: "center", marginBottom: 20 }}>
         <div style={{ fontSize: 44, fontWeight: 800, lineHeight: 1, marginBottom: 4 }}>
           {grandTotal > 0 ? fmtTime(grandTotal) : "No Data"}
         </div>
         {grandTotal > 0 && (
-          <div style={{ fontSize: 12, color: "rgba(255,255,255,0.5)", fontWeight: 500 }}>
+          <div style={{ fontSize: 12, color: t.textSub, fontWeight: 500 }}>
             Total workout time
           </div>
         )}
       </div>
 
-      {/* Activity pills */}
       {activeActs.length > 0 && (
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, justifyContent: "center", marginBottom: 18 }}>
           {activeActs.map((a) => (
@@ -81,8 +79,8 @@ const ShareableMonthCard = forwardRef(function ShareableMonthCard({ monthData, y
                 display: "flex",
                 alignItems: "center",
                 gap: 6,
-                background: `${a.color}25`,
-                border: `1px solid ${a.color}40`,
+                background: `${a.color}${t.pillBgAlpha}`,
+                border: `1px solid ${a.color}${t.pillBorderAlpha}`,
                 borderRadius: 12,
                 padding: "8px 12px",
               }}
@@ -97,24 +95,22 @@ const ShareableMonthCard = forwardRef(function ShareableMonthCard({ monthData, y
         </div>
       )}
 
-      {/* Stats row */}
       <div style={{ display: "flex", gap: 8 }}>
-        <div style={{ flex: 1, background: "rgba(255,255,255,0.08)", borderRadius: 12, padding: "10px 8px", textAlign: "center" }}>
+        <div style={{ flex: 1, background: t.statBg, borderRadius: 12, padding: "10px 8px", textAlign: "center" }}>
           <div style={{ fontSize: 18, fontWeight: 800 }}>{activeDays}<span style={{ fontSize: 11, fontWeight: 500, opacity: 0.5 }}>/{daysInMonth}</span></div>
-          <div style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 0.5 }}>Active Days</div>
+          <div style={{ fontSize: 9, fontWeight: 600, color: t.textSub, textTransform: "uppercase", letterSpacing: 0.5 }}>Active Days</div>
         </div>
-        <div style={{ flex: 1, background: "rgba(255,255,255,0.08)", borderRadius: 12, padding: "10px 8px", textAlign: "center" }}>
+        <div style={{ flex: 1, background: t.statBg, borderRadius: 12, padding: "10px 8px", textAlign: "center" }}>
           <div style={{ fontSize: 18, fontWeight: 800 }}>{activeActs.length}</div>
-          <div style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 0.5 }}>Activities</div>
+          <div style={{ fontSize: 9, fontWeight: 600, color: t.textSub, textTransform: "uppercase", letterSpacing: 0.5 }}>Activities</div>
         </div>
-        <div style={{ flex: 1, background: "rgba(255,255,255,0.08)", borderRadius: 12, padding: "10px 8px", textAlign: "center" }}>
+        <div style={{ flex: 1, background: t.statBg, borderRadius: 12, padding: "10px 8px", textAlign: "center" }}>
           <div style={{ fontSize: 18, fontWeight: 800 }}>{fmtTime(grandTotal)}</div>
-          <div style={{ fontSize: 9, fontWeight: 600, color: "rgba(255,255,255,0.5)", textTransform: "uppercase", letterSpacing: 0.5 }}>Total</div>
+          <div style={{ fontSize: 9, fontWeight: 600, color: t.textSub, textTransform: "uppercase", letterSpacing: 0.5 }}>Total</div>
         </div>
       </div>
 
-      {/* Footer */}
-      <div style={{ textAlign: "center", marginTop: 16, fontSize: 9, color: "rgba(255,255,255,0.25)", letterSpacing: 1 }}>
+      <div style={{ textAlign: "center", marginTop: 16, fontSize: 9, color: t.textFaint, letterSpacing: 1 }}>
         PappaFit Logger — Consistency is the real strength 💪
       </div>
     </div>
