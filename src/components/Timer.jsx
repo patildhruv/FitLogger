@@ -1,4 +1,5 @@
 import { useActivities } from "../hooks/useActivities";
+import { haptic } from "../utils/haptics";
 
 function formatTime(ms) {
   const totalSec = Math.floor(ms / 1000);
@@ -58,7 +59,7 @@ export default function Timer({ activeTimer, elapsed, isPaused, onStop, onCancel
       </div>
       <div style={{ display: "flex", gap: 10, justifyContent: "center", flexWrap: "wrap" }}>
         <button
-          onClick={onStop}
+          onClick={() => { haptic.medium(); onStop(); }}
           style={{
             background: activity.color,
             color: "#fff",
@@ -75,7 +76,7 @@ export default function Timer({ activeTimer, elapsed, isPaused, onStop, onCancel
         </button>
         {isPaused ? (
           <button
-            onClick={onResume}
+            onClick={() => { haptic.tap(); onResume(); }}
             style={{
               background: `${activity.color}20`,
               color: activity.color,
@@ -92,7 +93,7 @@ export default function Timer({ activeTimer, elapsed, isPaused, onStop, onCancel
           </button>
         ) : (
           <button
-            onClick={onPause}
+            onClick={() => { haptic.tap(); onPause(); }}
             style={{
               background: "var(--button-muted-bg)",
               color: "var(--button-muted-color)",
@@ -109,7 +110,7 @@ export default function Timer({ activeTimer, elapsed, isPaused, onStop, onCancel
           </button>
         )}
         <button
-          onClick={handleCancel}
+          onClick={() => { haptic.warning(); handleCancel(); }}
           style={{
             background: "var(--button-disabled-bg)",
             color: "var(--text-faint)",

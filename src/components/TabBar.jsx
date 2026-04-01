@@ -1,3 +1,5 @@
+import { haptic } from "../utils/haptics";
+
 export default function TabBar({ activeTab, onTabChange }) {
   const tabs = [
     { key: "today", label: "Today" },
@@ -22,7 +24,7 @@ export default function TabBar({ activeTab, onTabChange }) {
       {tabs.map((t) => (
         <button
           key={t.key}
-          onClick={() => onTabChange(t.key)}
+          onClick={() => { haptic.tick(); onTabChange(t.key); }}
           style={{
             flex: 1,
             padding: "10px 0",

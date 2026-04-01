@@ -1,6 +1,7 @@
 import { useRef, useState } from "react";
 import { useActivities } from "../hooks/useActivities";
 import { captureAndShare } from "../utils/shareCard";
+import { haptic } from "../utils/haptics";
 import ShareableCard from "./ShareableCard";
 
 function formatDate(dateStr) {
@@ -29,6 +30,7 @@ export default function History({ sortedDays }) {
   const cardRef = useRef(null);
 
   async function handleShare(day) {
+    haptic.tap();
     setSharingDay(day.date);
     // Wait for the card to render
     await new Promise((r) => setTimeout(r, 100));

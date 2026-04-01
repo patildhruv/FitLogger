@@ -1,4 +1,5 @@
 import { useActivities } from "../hooks/useActivities";
+import { haptic } from "../utils/haptics";
 
 export default function DayCell({ day, data, selected, onSelect, isSunday }) {
   const activities = useActivities();
@@ -18,7 +19,7 @@ export default function DayCell({ day, data, selected, onSelect, isSunday }) {
 
   return (
     <div
-      onClick={() => onSelect(day)}
+      onClick={() => { haptic.tick(); onSelect(day); }}
       style={{
         width: 44,
         height: 52,

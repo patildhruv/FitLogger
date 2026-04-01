@@ -3,6 +3,7 @@ import confetti from "canvas-confetti";
 import { useTimer } from "./hooks/useTimer";
 import { useLogs } from "./hooks/useLogs";
 import { useActivities } from "./hooks/useActivities";
+import { haptic } from "./utils/haptics";
 import Timer from "./components/Timer";
 import ActivityButtons from "./components/ActivityButtons";
 import TodayLog from "./components/TodayLog";
@@ -81,6 +82,7 @@ export default function App() {
   const [inputMode, setInputMode] = useState(() => localStorage.getItem("pappa-fit-input-mode") || "timer");
 
   function toggleInputMode() {
+    haptic.tap();
     setInputMode((m) => {
       const next = m === "timer" ? "manual" : "timer";
       try { localStorage.setItem("pappa-fit-input-mode", next); } catch {}
@@ -108,6 +110,7 @@ export default function App() {
   const handleTimerComplete = useCallback(
     (activityKey, minutes) => {
       addLog(activityKey, minutes);
+      haptic.success();
       confetti({ particleCount: 80, spread: 60, origin: { y: 0.7 } });
     },
     [addLog]
@@ -180,7 +183,7 @@ export default function App() {
         </button>
         {/* Settings - right */}
         <button
-          onClick={() => setShowSettings((s) => !s)}
+          onClick={() => { haptic.tick(); setShowSettings((s) => !s); }}
           style={{
             position: "absolute",
             right: 0,

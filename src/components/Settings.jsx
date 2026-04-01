@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useActivitiesManager } from "../hooks/useActivities";
 import { useInstallPrompt } from "../hooks/useInstallPrompt";
 import ActivityManager from "./ActivityManager";
+import { haptic } from "../utils/haptics";
 
 export default function Settings({ logs, onReplace, onMerge, onClearAll }) {
   const { activities, setAllActivities } = useActivitiesManager();
@@ -84,6 +85,7 @@ export default function Settings({ logs, onReplace, onMerge, onClearAll }) {
   }
 
   function handleClearNow() {
+    haptic.warning();
     if (window.confirm("Are you sure? ALL activity logs will be permanently deleted.")) {
       onClearAll();
       setConfirmClear(false);

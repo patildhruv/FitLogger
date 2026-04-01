@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { useLogs } from "../hooks/useLogs";
 import { captureAndShare } from "../utils/shareCard";
+import { haptic } from "../utils/haptics";
 import Calendar from "./Calendar";
 import ActivityDonut from "./ActivityDonut";
 import Summary from "./Summary";
@@ -28,6 +29,7 @@ export default function MonthlyView() {
   const isCurrentMonth = viewYear === currentYear && viewMonth === currentMonth;
 
   function goPrev() {
+    haptic.tick();
     if (viewMonth === 1) {
       setViewYear((y) => y - 1);
       setViewMonth(12);
@@ -38,6 +40,7 @@ export default function MonthlyView() {
 
   function goNext() {
     if (isCurrentMonth) return;
+    haptic.tick();
     if (viewMonth === 12) {
       setViewYear((y) => y + 1);
       setViewMonth(1);
@@ -48,6 +51,7 @@ export default function MonthlyView() {
 
   async function handleShare() {
     if (sharing) return;
+    haptic.tap();
     setSharing(true);
     // Wait for card to render
     await new Promise((r) => setTimeout(r, 100));

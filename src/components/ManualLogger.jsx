@@ -1,6 +1,7 @@
 import { useState } from "react";
 import confetti from "canvas-confetti";
 import { useActivities } from "../hooks/useActivities";
+import { haptic } from "../utils/haptics";
 
 const PRESETS = [15, 30, 45, 60];
 
@@ -9,6 +10,7 @@ export default function ManualLogger({ todayData, onLog }) {
   const [values, setValues] = useState({});
 
   function adjust(key, delta) {
+    haptic.tick();
     setValues((prev) => {
       const current = prev[key] || 0;
       const next = Math.max(0, current + delta);
@@ -24,6 +26,7 @@ export default function ManualLogger({ todayData, onLog }) {
   function handleLog(key) {
     const mins = values[key];
     if (!mins || mins <= 0) return;
+    haptic.medium();
     onLog(key, mins);
     setValues((prev) => ({ ...prev, [key]: 0 }));
     confetti({ particleCount: 50, spread: 40, origin: { y: 0.8 } });
@@ -154,7 +157,7 @@ export default function ManualLogger({ todayData, onLog }) {
               {PRESETS.map((p) => (
                 <button
                   key={p}
-                  onClick={() => setValues((prev) => ({ ...prev, [a.key]: p }))}
+                  onClick={() => { haptic.tick(); setValues((prev) => ({ ...prev, [a.key]: p })); }}
                   style={{
                     flex: 1,
                     padding: "6px 0",

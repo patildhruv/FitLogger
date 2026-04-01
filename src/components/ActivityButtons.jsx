@@ -1,4 +1,5 @@
 import { useActivities } from "../hooks/useActivities";
+import { haptic } from "../utils/haptics";
 
 export default function ActivityButtons({ onStart, isRunning, activeActivity }) {
   const activities = useActivities();
@@ -19,7 +20,7 @@ export default function ActivityButtons({ onStart, isRunning, activeActivity }) 
         return (
           <button
             key={a.key}
-            onClick={() => !isRunning && onStart(a.key)}
+            onClick={() => { if (!isRunning) { haptic.tap(); onStart(a.key); } }}
             disabled={isDisabled}
             style={{
               display: "flex",

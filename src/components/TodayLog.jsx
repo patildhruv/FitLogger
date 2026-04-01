@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { useActivities } from "../hooks/useActivities";
 import { captureAndShare } from "../utils/shareCard";
+import { haptic } from "../utils/haptics";
 import ShareableCard from "./ShareableCard";
 
 export default function TodayLog({ todayData, dayNote, onNoteChange, onEditLog, dateStr, activeDays, daysInMonth, todayDateKey }) {
@@ -22,6 +23,7 @@ export default function TodayLog({ todayData, dayNote, onNoteChange, onEditLog, 
     const trimmed = note.trim();
     if (trimmed !== dayNote) {
       onNoteChange(trimmed);
+      haptic.tick();
       showToast("Note saved");
     }
   }
@@ -38,6 +40,7 @@ export default function TodayLog({ todayData, dayNote, onNoteChange, onEditLog, 
 
   function saveEdit(activityKey) {
     const newMin = parseInt(editValue) || 0;
+    haptic.tap();
     if (onEditLog) {
       onEditLog(todayDateKey, activityKey, newMin);
     }
@@ -47,6 +50,7 @@ export default function TodayLog({ todayData, dayNote, onNoteChange, onEditLog, 
 
   async function handleShare() {
     if (sharing) return;
+    haptic.tap();
     setSharing(true);
     await new Promise((r) => setTimeout(r, 100));
     if (cardRef.current) {
