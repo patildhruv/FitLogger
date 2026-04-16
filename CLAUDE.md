@@ -1,6 +1,6 @@
-# PappaFit Logger
+# FitLogger
 
-A fitness habit tracker PWA for daily activity logging, built with React 18 + Vite.
+A generic fitness habit tracker PWA for daily activity logging, built with React 18 + Vite. Anyone can use it — no account, all data stored locally.
 
 ## Tech Stack
 - **React 18** + **Vite 5** (JSX, no TypeScript)
@@ -52,6 +52,7 @@ src/
 - **Dark mode** auto-adapts via `prefers-color-scheme` media query with CSS custom properties in `index.html`.
 
 ## Data Shape (localStorage)
+Note: storage keys are prefixed `pappa-fit-*` for historical reasons — app was originally rebranded from PappaFit. Keys kept to preserve existing-user data.
 ```js
 // "pappa-fit-logs"
 { "2026-03-31": { walking: 25, pranayam: 15, yoga: 40, note: "Great day" }, ... }
@@ -90,7 +91,7 @@ src/
 ## Git
 - Branch: `claude/fitness-habit-tracker-Ol89r` and `main` (kept in sync)
 - Deployed via GitHub Pages + GitHub Actions
-- Live at: https://patildhruv.github.io/PappaFitLogger/
+- Live at: https://patildhruv.github.io/FitLogger/
 
 ## Build & Dev
 ```bash
@@ -99,3 +100,55 @@ npm run dev      # localhost:5173
 npm run build    # dist/
 npm run preview  # preview production build
 ```
+
+## Migration Roadmap: PWA → React Native
+
+**Decision:** Rewrite in React Native + Capacitor wrap for native distribution and future features.
+
+### Why migrate
+- iOS blocks Vibration API (no haptics in PWA)
+- Lock screen timer / Live Activities require Swift extension (impossible in PWA)
+- HealthKit / Google Fit integration not available to web apps
+- iOS push notifications unreliable in PWA
+- No App Store / Play Store distribution as PWA
+- No background processing in browser
+
+### Migration strategy
+1. **Keep current PWA deployed** at GitHub Pages as v1
+2. **Reuse logic layer** — hooks (`useLogs`, `useTimer`, `useActivities`), data shapes, and state management port directly to RN
+3. **Rewrite UI layer** — `<div>` → `<View>`, `<span>` → `<Text>`, inline styles → `StyleSheet.create()`
+4. **Native extensions** (one repo, one branch):
+   - `ios/` — Swift/SwiftUI Live Activity extension for lock screen timer
+   - `android/` — Persistent notification with timer (Kotlin)
+   - JS calls same API, platform-specific implementation underneath
+5. **Capacitor** as optional intermediate step — wraps current web code in native shell before full RN rewrite
+
+### Dev environment
+- Development machine runs **WSL** (no native iOS simulator available)
+- Use **Expo (managed workflow)** for development and testing:
+  - `npx expo start` in WSL → scan QR code with Expo Go app on phone → live preview with hot reload over WiFi
+  - No emulator, USB, or cables needed for day-to-day development
+- **Android testing**: Expo Go app on physical Android phone
+- **iOS testing**: EAS Build (cloud) → TestFlight on physical iPhone for RN code
+- **iOS native modules (Swift)**: developed on a separate MacBook + Xcode + physical iPhone — only for Swift/SwiftUI extensions (Live Activities, HealthKit, etc.). All other code remains React Native, developed from WSL
+
+### Portable code (reuse as-is)
+- `useLogs.js` — CRUD logic, data shape
+- `useTimer.js` — timer math (startedAt, pausedAt, totalPausedMs)
+- `useActivities.jsx` — context provider, add/remove/reset logic
+- `data/activities.js` — default activities array
+- `utils/cardTheme.js` — theme resolution logic
+
+### Must rewrite for RN
+- All components (different primitives: View, Text, ScrollView, etc.)
+- Inline styles → StyleSheet
+- html2canvas → react-native-view-shot
+- CSS custom properties → RN theme context or useColorScheme()
+- localStorage → AsyncStorage or MMKV
+- Service worker / PWA → not needed (native app)
+- SVG charts → react-native-svg
+
+### Future: Multi-user
+- Lightweight auth (passphrase-based or shareable URL, not full OAuth)
+- Supabase backend (free tier): `user_id | data (JSON) | updated_at`
+- localStorage/AsyncStorage as offline cache, sync when online

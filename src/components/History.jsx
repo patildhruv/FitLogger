@@ -38,7 +38,7 @@ export default function History({ sortedDays }) {
     try {
       await captureAndShare(cardRef.current, {
         text: `My fitness summary for ${formatDate(day.date)}!`,
-        filename: `pappafit-summary-${day.date}.png`,
+        filename: `fitlogger-summary-${day.date}.png`,
       });
     } catch {}
     setSharingDay(null);

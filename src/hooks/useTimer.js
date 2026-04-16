@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 
 const TIMER_KEY = "pappa-fit-active-timer";
-const DEFAULT_TITLE = "PappaFit Logger - Daily Fitness Tracker";
+const DEFAULT_TITLE = "FitLogger - Daily Fitness Tracker";
 const MAX_MINUTES = 480; // 8 hours
 
 function loadTimer() {
@@ -52,12 +52,12 @@ export function useTimer(activities, onComplete) {
         const el = computeElapsed(activeTimer);
         setElapsed(el);
         const act = activitiesRef.current?.find((a) => a.key === activeTimer.activity);
-        document.title = `${act?.emoji || ""} ${formatTimeShort(el)} - PappaFit`;
+        document.title = `${act?.emoji || ""} ${formatTimeShort(el)} - FitLogger`;
       }, 1000);
     } else if (activeTimer && activeTimer.pausedAt) {
       setElapsed(computeElapsed(activeTimer));
       const act = activitiesRef.current?.find((a) => a.key === activeTimer.activity);
-      document.title = `⏸ ${act?.label || ""} Paused - PappaFit`;
+      document.title = `⏸ ${act?.label || ""} Paused - FitLogger`;
     } else {
       setElapsed(0);
       document.title = DEFAULT_TITLE;

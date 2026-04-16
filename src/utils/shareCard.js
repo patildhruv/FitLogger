@@ -12,7 +12,7 @@ export async function captureAndShare(element, { text, filename } = {}) {
     canvas.toBlob(resolve, "image/png")
   );
 
-  const fname = filename || `pappafit-summary-${new Date().toISOString().slice(0, 10)}.png`;
+  const fname = filename || `fitlogger-summary-${new Date().toISOString().slice(0, 10)}.png`;
 
   if (navigator.share && blob) {
     const file = new File([blob], fname, { type: "image/png" });

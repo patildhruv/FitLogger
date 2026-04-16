@@ -59,7 +59,7 @@ export default function MonthlyView() {
       try {
         await captureAndShare(cardRef.current, {
           text: `My fitness summary for ${MONTH_NAMES[viewMonth - 1]} ${viewYear}!`,
-          filename: `pappafit-${viewYear}-${String(viewMonth).padStart(2, "0")}.png`,
+          filename: `fitlogger-${viewYear}-${String(viewMonth).padStart(2, "0")}.png`,
         });
       } catch {}
     }

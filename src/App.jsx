@@ -42,7 +42,7 @@ function SplashScreen({ fading, onDismiss }) {
           textAlign: "center",
         }}
       >
-        PappaFit Logger
+        FitLogger
       </h1>
       <div style={{ fontSize: 13, color: "var(--text-muted)", fontWeight: 500 }}>
         Daily Fitness Tracker
@@ -221,7 +221,7 @@ export default function App() {
             lineHeight: 1.1,
           }}
         >
-          Pappa's Tracker
+          FitLogger
         </h1>
         {/* Subtle animated underline */}
         <div style={{

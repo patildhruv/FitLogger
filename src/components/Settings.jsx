@@ -24,7 +24,7 @@ export default function Settings({ logs, onReplace, onMerge, onClearAll }) {
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `pappafit-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.download = `fitlogger-backup-${new Date().toISOString().slice(0, 10)}.json`;
     a.click();
     URL.revokeObjectURL(url);
   }
@@ -125,7 +125,7 @@ export default function Settings({ logs, onReplace, onMerge, onClearAll }) {
             Install App
           </div>
           <div style={{ fontSize: 12, color: "var(--text-muted)", marginBottom: 10 }}>
-            Install PappaFit on your phone for quick access, offline support, and a full-screen experience.
+            Install FitLogger on your phone for quick access, offline support, and a full-screen experience.
           </div>
 
           {canInstall ? (
@@ -144,7 +144,7 @@ export default function Settings({ logs, onReplace, onMerge, onClearAll }) {
                 fontFamily: "'DM Sans', sans-serif",
               }}
             >
-              📲 Install PappaFit App
+              📲 Install FitLogger App
             </button>
           ) : (
             <>

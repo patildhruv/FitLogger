@@ -35,7 +35,7 @@ const ShareableCard = forwardRef(function ShareableCard({ dayData, dateStr, acti
           {dateStr}
         </div>
         <div style={{ fontSize: 11, color: t.textSub, fontWeight: 500 }}>
-          Pappa's Tracker
+          FitLogger
         </div>
       </div>
 
@@ -105,7 +105,7 @@ const ShareableCard = forwardRef(function ShareableCard({ dayData, dateStr, acti
       )}
 
       <div style={{ textAlign: "center", marginTop: 16, fontSize: 9, color: t.textFaint, letterSpacing: 1 }}>
-        PappaFit Logger — Consistency is the real strength 💪
+        FitLogger — Consistency is the real strength 💪
       </div>
     </div>
   );

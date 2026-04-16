@@ -55,7 +55,7 @@ const ShareableMonthCard = forwardRef(function ShareableMonthCard({ monthData, y
           {MONTH_NAMES[month - 1]} {year}
         </div>
         <div style={{ fontSize: 11, color: t.textSub, fontWeight: 500 }}>
-          Pappa's Tracker
+          FitLogger
         </div>
       </div>
 
@@ -111,7 +111,7 @@ const ShareableMonthCard = forwardRef(function ShareableMonthCard({ monthData, y
       </div>
 
       <div style={{ textAlign: "center", marginTop: 16, fontSize: 9, color: t.textFaint, letterSpacing: 1 }}>
-        PappaFit Logger — Consistency is the real strength 💪
+        FitLogger — Consistency is the real strength 💪
       </div>
     </div>
   );
